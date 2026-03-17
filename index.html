@@ -1,17 +1,17 @@
+
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ניהול תור מחסן - אקוופולקו חן בע"מ</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root {
             --indigo-600: #4f46e5; --indigo-700: #4338ca;
-            --slate-50: #f8fafc; --slate-100: #f1f5f9;
-            --slate-200: #e2e8f0; --slate-500: #64748b;
-            --green-600: #16a34a; --red-500: #ef4444;
+            --slate-50: #f8fafc; --slate-200: #e2e8f0; --slate-500: #64748b;
         }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background: var(--slate-50); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; direction: rtl; }
+        body { font-family: "Segoe UI", system-ui, sans-serif; margin: 0; background: var(--slate-50); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; direction: rtl; }
         .container { width: 100%; max-width: 480px; }
         .nav-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; }
         .tab-btn { background: white; border: 1px solid var(--slate-200); padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 600; color: var(--slate-500); transition: 0.2s; }
@@ -28,11 +28,10 @@
     </style>
 </head>
 <body>
-
 <div class="container">
-    <header style="text-align: center; margin-bottom: 20px;">
-        <h1 style="font-size: 22px; margin-bottom: 5px;">ניהול תור מחסן</h1>
-        <p style="color: var(--indigo-600); font-weight: bold;">אקוופולקו חן בע"מ</p>
+    <header style="text-align:center; margin-bottom:20px;">
+        <img src="data:image/jpeg;base64,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" alt="Aquapolco Logo" style="max-width:180px; margin-bottom:10px;">
+        <h1 style="font-size:22px; margin-bottom:5px;">ניהול תור מחסן</h1>
     </header>
 
     <div class="nav-tabs">
@@ -42,13 +41,15 @@
         <button class="tab-btn" onclick="showTab('admin')">מנהל</button>
     </div>
 
+    <!-- צפייה -->
     <div id="tab-view" class="card active"><div id="queue-list">טוען...</div></div>
 
+    <!-- קבע תור -->
     <div id="tab-book" class="card">
         <div id="geoBannerBook" class="geo-banner">📍 בודק מיקום...</div>
         <form id="bookForm" onsubmit="handleBook(event)" class="disabled">
             <input type="text" id="techName" placeholder="שם טכנאי" required>
-            <input type="text" id="techId" inputmode="numeric" placeholder="ת.ז טכנאי" required>
+            <input type="text" id="techId" inputmode="numeric" placeholder="ת.ז טכנאי (9 ספרות)" required pattern="\d{9}" maxlength="9" oninput="this.value=this.value.replace(/\D/g,'')" title="יש להזין בדיוק 9 ספרות">
             <input type="text" id="custName" placeholder="שם לקוח" required>
             <input type="text" id="custAddress" placeholder="כתובת לקוח" required>
             <div style="border:1px solid var(--slate-200); border-radius:8px; padding:12px; margin-bottom:16px;">
@@ -63,6 +64,7 @@
         </form>
     </div>
 
+    <!-- צוות מחסן -->
     <div id="tab-staff" class="card">
         <input type="password" id="staffPass" placeholder="סיסמה">
         <button class="primary" onclick="loginStaff()">כניסה</button>
@@ -75,22 +77,25 @@
         </div>
     </div>
 
+    <!-- מנהל -->
     <div id="tab-admin" class="card">
         <input type="password" id="adminPass" placeholder="סיסמה">
         <button class="primary" onclick="loginAdmin()">כניסה</button>
         <div id="admin-tools" style="display:none; margin-top:20px;">
+            <!-- סיסמאות -->
             <div style="background:#f1f5f9; padding:10px; border-radius:8px; border:1px solid #4f46e5; margin-bottom:12px;">
                 <p style="font-size:12px; margin:0 0 10px 0;">ניהול סיסמות:</p>
                 <button class="primary" onclick="changeAdminPassword()" style="margin-bottom:8px;">שנה סיסמת מנהל</button>
                 <button class="primary" onclick="setStaffPassword()">הגדר סיסמה לצוות</button>
                 <p id="passwordStatus" style="font-size:11px; text-align:center; margin-top:10px;"></p>
             </div>
-            <div style="background:#f1f5f9; padding:10px; border-radius:8px; border:1px solid #4f46e5;">
+            <!-- GPS -->
+            <div style="background:#f1f5f9; padding:10px; border-radius:8px; border:1px solid #4f46e5; margin-bottom:12px;">
                 <p style="font-size:12px; margin:0 0 10px 0;">אם ה-GPS לא עובד, לחץ למטה:</p>
                 <button class="primary" onclick="forceSetLocation()">הגדר מיקום מחסן (כפר סבא)</button>
                 <p id="anchorDisplay" style="font-size:11px; text-align:center; margin-top:10px;"></p>
             </div>
-            <div style="background:#f1f5f9; padding:10px; border-radius:8px; border:1px solid #4f46e5; margin-top:12px;">
+            <div style="background:#f1f5f9; padding:10px; border-radius:8px; border:1px solid #4f46e5; margin-bottom:12px;">
                 <p style="font-size:12px; margin:0 0 10px 0;">כלי GPS (מנהל בלבד):</p>
                 <button class="primary" onclick="requestGpsPermission()">בקש הרשאת GPS</button>
                 <button class="primary" style="margin-top:8px;" onclick="setAnchorFromCurrentLocation()">קבע מיקום מחסן לפי המיקום הנוכחי</button>
@@ -100,10 +105,15 @@
                 </label>
                 <p id="gpsAdminStatus" style="font-size:11px; text-align:center; margin-top:10px;"></p>
             </div>
-            <div style="background:#f1f5f9; padding:10px; border-radius:8px; border:1px solid #4f46e5; margin-top:12px;">
-                <p style="font-size:12px; margin:0 0 10px 0;">גיבוי / שחזור (מקומי בדפדפן):</p>
-                <button class="primary" onclick="exportData()">ייצוא נתונים (JSON)</button>
-                <button class="primary" style="margin-top:8px;" onclick="importData()">ייבוא נתונים (JSON)</button>
+            <!-- דוח אקסל -->
+            <div style="background:#f1f5f9; padding:10px; border-radius:8px; border:1px solid #16a34a; margin-bottom:12px;">
+                <p style="font-size:12px; margin:0 0 10px 0; color:#16a34a; font-weight:600;">📊 דוחות:</p>
+                <button class="primary" style="background:#16a34a;" onclick="exportExcel()">📥 הפק דוח אקסל של התור הנוכחי</button>
+            </div>
+            <!-- מחק הכל -->
+            <div style="background:#f1f5f9; padding:10px; border-radius:8px; border:1px solid #ef4444; margin-bottom:12px;">
+                <p style="font-size:12px; margin:0 0 10px 0; color:#ef4444; font-weight:600;">⚠️ ניהול תור:</p>
+                <button class="primary" style="background:#ef4444;" onclick="clearAllQueue()">🗑️ מחק את כל התור (העבר לסל אשפה)</button>
             </div>
             <div id="admin-list" style="margin-top:20px;"></div>
         </div>
@@ -111,391 +121,196 @@
 </div>
 
 <script>
-    // JSONBin Configuration
     const JSONBIN_API_KEY = '$2a$10$o5TG115afplVVQHbHpllSetPPkMGXEM1BN5dgls6w6HMmQ2QOamY2';
-    const JSONBIN_BIN_ID = '69b86bcfb7ec241ddc74757a'; // Bin created and active
+    const JSONBIN_BIN_ID = '69b86bcfb7ec241ddc74757a';
     const STORAGE_KEY = 'queue_mgmt_app_v1';
     let appData = { queue: [], anchor: null, gpsOverride: false, adminPassword: null, staffPassword: null, deletedItems: [] };
 
-    async function createJsonBinIfNeeded() {
-        if (JSONBIN_BIN_ID) return; // Already have a bin
-        try {
-            const res = await fetch('https://api.jsonbin.io/v3/b', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Master-Key': JSONBIN_API_KEY
-                },
-                body: JSON.stringify({ queue: [], anchor: null, gpsOverride: false, adminPassword: null, staffPassword: null, deletedItems: [] })
-            });
-            if (res.ok) {
-                const data = await res.json();
-                console.log('JSONBin Bin Created:', data.metadata.id);
-                alert('✅ JSONBin bin created successfully!\n\nBin ID: ' + data.metadata.id + '\n\nPlease update the JSONBIN_BIN_ID in the code with this ID.');
-            }
-        } catch (e) {
-            console.error('Failed to create JSONBin bin:', e);
-        }
-    }
-
     async function loadData() {
-        // Try loading from JSONBin first
         if (JSONBIN_BIN_ID) {
             try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-                    headers: { 'X-Master-Key': JSONBIN_API_KEY }
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    appData = normalizeData(data.record ?? data);
-                    console.log('✅ Data loaded from JSONBin');
-                    return;
-                }
-            } catch (e) {
-                console.error('Failed to load from JSONBin:', e);
-            }
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, { headers: { 'X-Master-Key': JSONBIN_API_KEY } });
+                if (res.ok) { const data = await res.json(); appData = normalizeData(data.record ?? data); return; }
+            } catch (e) { console.error(e); }
         }
-        
-        // Fallback to localStorage
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return;
-        try {
-            const parsed = JSON.parse(raw);
-            if (parsed && typeof parsed === 'object') appData = normalizeData(parsed);
-            console.log('✅ Data loaded from localStorage');
-        } catch (e) {
-            console.error('Failed to parse local data', e);
-        }
+        if (raw) try { appData = normalizeData(JSON.parse(raw)); } catch(e) {}
     }
 
     function normalizeData(data) {
-        const queue = Array.isArray(data.queue) ? data.queue : [];
-        const anchor = data.anchor && typeof data.anchor === 'object' ? data.anchor : null;
-        const gpsOverride = !!data.gpsOverride;
-        const adminPassword = data.adminPassword || null;
-        const staffPassword = data.staffPassword || null;
-        const deletedItems = Array.isArray(data.deletedItems) ? data.deletedItems : [];
-        return { queue, anchor, gpsOverride, adminPassword, staffPassword, deletedItems };
+        return {
+            queue: Array.isArray(data.queue) ? data.queue : [],
+            anchor: data.anchor && typeof data.anchor === 'object' ? data.anchor : null,
+            gpsOverride: !!data.gpsOverride,
+            adminPassword: data.adminPassword || null,
+            staffPassword: data.staffPassword || null,
+            deletedItems: Array.isArray(data.deletedItems) ? data.deletedItems : []
+        };
+    }
+
+    async function saveData() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+        if (JSONBIN_BIN_ID) {
+            try {
+                await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_API_KEY },
+                    body: JSON.stringify(appData)
+                });
+            } catch (e) { console.error(e); }
+        }
+        renderAll();
     }
 
     function formatDateHebrewLong(date) {
         const d = new Date(date);
-        const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
-        const months = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
-        const day = days[d.getDay()];
-        const date_num = d.getDate();
-        const month = months[d.getMonth()];
-        const hour = String(d.getHours()).padStart(2, '0');
-        const min = String(d.getMinutes()).padStart(2, '0');
-        return `${day}, ${date_num} ${month} בשעה ${hour}:${min}`;
-    }
-
-    async function saveData() {
-        // Save to localStorage
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-        
-        // Try saving to JSONBin
-        if (JSONBIN_BIN_ID) {
-            try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': JSONBIN_API_KEY
-                    },
-                    body: JSON.stringify(appData)
-                });
-                if (res.ok) {
-                    console.log('✅ Data saved to JSONBin');
-                }
-            } catch (e) {
-                console.error('Failed to save to JSONBin:', e);
-            }
-        }
-        
-        renderAll();
-    }
-
-    function renderAll() {
-        const getOrderStatusColor = (status) => {
-            if (status === 'מוכן') return '#22c55e'; // green
-            if (status === 'בהכנה') return '#eab308'; // yellow
-            return '#f97316'; // orange for ממתין
-        };
-        document.getElementById('queue-list').innerHTML = (appData.queue || []).length
-            ? appData.queue.map(i => `
-                <div class="item-card">
-                    <div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
-                        <div style="flex:1; min-width:0; flex-basis:100%;">
-                            <b>${escapeHtml(i.techName)}</b> (${escapeHtml(i.techId || '')}) - ${escapeHtml(i.custName)}
-                            <div style="font-size:12px; color:var(--slate-500); margin-top:6px;">
-                                כתובת: ${escapeHtml(i.custAddress || '')}
-                            </div>
-                            ${renderItemsLine(i.items)}
-                        </div>
-                        <div style="display:flex; gap:8px; width:100%; margin-top:10px;">
-                            <div style="flex:1;">
-                                <p style="font-size:10px; color:var(--slate-500); margin:0 0 4px 0; font-weight:600;">סטטוס הזמנה:</p>
-                                <div style="background:${getOrderStatusColor(i.orderStatus || 'ממתין')}; color:white; padding:6px 10px; border-radius:4px; text-align:center; font-weight:600; font-size:12px;">
-                                    ${escapeHtml(i.orderStatus || 'ממתין')}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `).join('')
-            : 'התור ריק';
-        const ad = document.getElementById('anchorDisplay');
-        if(ad) { ad.innerHTML = appData.anchor ? "מיקום הוגדר בשרת ✓" : "מיקום לא מוגדר"; ad.style.color = appData.anchor ? "green" : "red"; }
-        const og = document.getElementById('gpsOverrideToggle');
-        if (og) og.checked = !!appData.gpsOverride;
-        
-        const al = document.getElementById('admin-list');
-        if(al) al.innerHTML = (appData.queue || []).map((i, idx) => {
-            const getOrderStatusColor = (status) => {
-                if (status === 'מוכן') return '#22c55e';
-                if (status === 'בהכנה') return '#eab308';
-                return '#f97316';
-            };
-            const createdAtStr = i.createdAt ? formatDateHebrewLong(i.createdAt) : 'לא ידוע';
-            return `
-            <div class="item-card" draggable="true" ondragstart="dragStart(event, '${String(i.id).replace(/'/g, "\\'")}')" ondragover="dragOver(event)" ondrop="dragDrop(event, '${String(i.id).replace(/'/g, "\\'")}')" style="cursor:move; opacity:${1}; transition:opacity 0.2s;">
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
-                    <div style="flex:1; min-width:0;">
-                        <b>${escapeHtml(i.techName)}</b> (${escapeHtml(i.techId || '')}) - ${escapeHtml(i.custName)}
-                        <div style="font-size:12px; color:var(--slate-500); margin-top:6px;">
-                            כתובת: ${escapeHtml(i.custAddress || '')}
-                        </div>
-                        ${renderItemsLine(i.items)}
-                        <div style="font-size:11px; color:#666; margin-top:6px; border-top:1px solid #e2e8f0; padding-top:6px;">
-                            📅 נוצר ב: ${createdAtStr}
-                        </div>
-                    </div>
-                </div>
-                <div style="display:flex; gap:8px; margin-bottom:10px;">
-                    <div style="flex:1;">
-                        <p style="font-size:10px; color:var(--slate-500); margin:0 0 4px 0; font-weight:600;">סטטוס הזמנה:</p>
-                        <div style="background:${getOrderStatusColor(i.orderStatus || 'ממתין')}; color:white; padding:6px 10px; border-radius:4px; text-align:center; font-weight:600; font-size:12px;">
-                            ${escapeHtml(i.orderStatus || 'ממתין')}
-                        </div>
-                    </div>
-                </div>
-                <div style="display:flex; gap:6px; margin-bottom:8px;">
-                    <button onclick="moveItem('${String(i.id).replace(/'/g, "\\'")}', -1)" style="flex:1; background:#e2e8f0;color:#0f172a;border:none;padding:6px 8px;border-radius:6px; font-weight:600;" ${idx===0?'disabled':''} title="למעלה">▲</button>
-                    <button onclick="moveItem('${String(i.id).replace(/'/g, "\\'")}', 1)" style="flex:1; background:#e2e8f0;color:#0f172a;border:none;padding:6px 8px;border-radius:6px; font-weight:600;" ${idx===(appData.queue.length-1)?'disabled':''} title="למטה">▼</button>
-                    <button onclick="showAuditLog('${String(i.id).replace(/'/g, "\\'")}')" style="flex:1; background:#4f46e5;color:white;border:none;padding:6px 8px;border-radius:6px; font-weight:600;">📋 היסטוריה</button>
-                    <button onclick="deleteItem('${String(i.id).replace(/'/g, "\\'")}')" style="flex:1; background:red;color:white;border:none;padding:6px 8px;border-radius:6px; font-weight:600;">🗑️ מחיקה</button>
-                </div>
-            </div>
-        `; }).join('') + `
-            <div style="margin-top:30px; padding-top:20px; border-top:2px solid #4f46e5;">
-                <h3 style="color:#ef4444; margin:0 0 15px 0;">🗑️ סל אשפה (${(appData.deletedItems || []).length})</h3>
-                ${(appData.deletedItems || []).length ? (appData.deletedItems || []).map(i => `
-                    <div class="item-card" style="border-left:4px solid #ef4444;">
-                        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
-                            <div style="flex:1;">
-                                <b>${escapeHtml(i.techName)}</b> - ${escapeHtml(i.custName)}
-                                <div style="font-size:12px; color:var(--slate-500); margin-top:6px;">
-                                    ${escapeHtml(i.custAddress || '')}
-                                </div>
-                                <div style="font-size:11px; color:#999; margin-top:6px;">
-                                    ❌ נמחק ב: ${i.deletedAt ? formatDateHebrewLong(i.deletedAt) : 'לא ידוע'}
-                                </div>
-                            </div>
-                        </div>
-                        <div style="display:flex; gap:6px;">
-                            <button onclick="restoreItem('${String(i.id).replace(/'/g, "\\'")}')" style="flex:1; background:#16a34a;color:white;border:none;padding:6px 8px;border-radius:6px; font-weight:600;">♻️ שחזור</button>
-                            <button onclick="permanentlyDeleteItem('${String(i.id).replace(/'/g, "\\'")}')" style="flex:1; background:#7f1d1d;color:white;border:none;padding:6px 8px;border-radius:6px; font-weight:600;">מחיקה קבועה</button>
-                        </div>
-                    </div>
-                `).join('') : '<div style="color:var(--slate-500); text-align:center; padding:20px;">הסל ריק</div>'}
-            </div>
-        `;
-        renderPasswordSection();
-        if (document.getElementById('staff-tools')?.style.display === 'block') {
-            renderStaffQueue();
-        }
+        const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+        const months = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+        return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} בשעה ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
     }
 
     function escapeHtml(v) {
-        return String(v ?? '').replace(/[&<>"']/g, (c) => ({
-            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-        }[c]));
+        return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":`&#39;`}[c]));
     }
 
     function renderItemsLine(items) {
         const safe = Array.isArray(items) ? items : [];
-        if (!safe.length) return '';
-        const parts = safe
-            .filter(x => x && (x.name || x.qty))
-            .map(x => `${escapeHtml(x.name || '')}${x.qty ? ` × ${escapeHtml(x.qty)}` : ''}`)
-            .filter(Boolean);
-        if (!parts.length) return '';
-        return `<div style="font-size:12px; color:var(--slate-500); margin-top:6px;">פריטים: ${parts.join(' , ')}</div>`;
+        const parts = safe.filter(x => x && (x.name || x.qty)).map(x => `${escapeHtml(x.name||'')}${x.qty?' × '+escapeHtml(x.qty):''}`).filter(Boolean);
+        return parts.length ? `<div style="font-size:12px;color:var(--slate-500);margin-top:6px;">פריטים: ${parts.join(' , ')}</div>` : '';
     }
 
-    function forceSetLocation() {
-        appData.anchor = { lat: 32.2003, lng: 34.8911 }; // הקואורדינטות של כפר סבא ששלחת
+    function getStatusColor(s) {
+        if (s==='מוכן') return '#22c55e';
+        if (s==='בהכנה') return '#eab308';
+        return '#f97316';
+    }
+
+    function renderAll() {
+        // תצוגה ציבורית - ללא ת.ז
+        document.getElementById('queue-list').innerHTML = (appData.queue||[]).length
+            ? appData.queue.map(i => `
+                <div class="item-card">
+                    <b>${escapeHtml(i.techName)}</b> - ${escapeHtml(i.custName)}
+                    <div style="font-size:12px;color:var(--slate-500);margin-top:6px;">כתובת: ${escapeHtml(i.custAddress||"")}</div>
+                    ${renderItemsLine(i.items)}
+                    <div style="margin-top:10px;">
+                        <div style="background:${getStatusColor(i.orderStatus||'ממתין')};color:white;padding:6px 10px;border-radius:4px;text-align:center;font-weight:600;font-size:12px;">${escapeHtml(i.orderStatus||'ממתין')}</div>
+                    </div>
+                </div>`).join('')
+            : 'התור ריק';
+
+        const ad = document.getElementById('anchorDisplay');
+        if (ad) { ad.textContent = appData.anchor ? "מיקום הוגדר ✓" : "מיקום לא מוגדר"; ad.style.color = appData.anchor ? "green" : "red"; }
+        const og = document.getElementById('gpsOverrideToggle');
+        if (og) og.checked = !!appData.gpsOverride;
+
+        // תצוגת מנהל - עם ת.ז
+        const al = document.getElementById('admin-list');
+        if (al) {
+            al.innerHTML = (appData.queue||[]).map((i, idx) => `
+                <div class="item-card" draggable="true" ondragstart="dragStart(event,'${String(i.id).replace(/'/g,"\'")}') " ondragover="dragOver(event)" ondrop="dragDrop(event,'${String(i.id).replace(/'/g,"\'")}')">
+                    <div style="margin-bottom:8px;">
+                        <b>${escapeHtml(i.techName)}</b>
+                        <span style="background:#4f46e5;color:white;padding:2px 7px;border-radius:4px;font-size:12px;margin-right:6px;">ת.ז: ${escapeHtml(i.techId||'')} </span>
+                        - ${escapeHtml(i.custName)}
+                        <div style="font-size:12px;color:var(--slate-500);margin-top:4px;">כתובת: ${escapeHtml(i.custAddress||'')} </div>
+                        ${renderItemsLine(i.items)}
+                        <div style="font-size:11px;color:#666;margin-top:6px;border-top:1px solid #e2e8f0;padding-top:6px;">📅 ${i.createdAt ? formatDateHebrewLong(i.createdAt) : ''}</div>
+                    </div>
+                    <div style="background:${getStatusColor(i.orderStatus||'ממתין')};color:white;padding:6px;border-radius:4px;text-align:center;font-weight:600;font-size:12px;margin-bottom:8px;">${escapeHtml(i.orderStatus||'ממתין')}</div>
+                    <div style="display:flex;gap:6px;">
+                        <button onclick="moveItem('${String(i.id).replace(/'/g,"\'")}', -1)" style="flex:1;background:#e2e8f0;color:#0f172a;border:none;padding:6px;border-radius:6px;font-weight:600;" ${idx===0?'disabled':''}>▲</button>
+                        <button onclick="moveItem('${String(i.id).replace(/'/g,"\'")}', 1)" style="flex:1;background:#e2e8f0;color:#0f172a;border:none;padding:6px;border-radius:6px;font-weight:600;" ${idx===(appData.queue.length-1)?'disabled':''}>▼</button>
+                        <button onclick="showAuditLog('${String(i.id).replace(/'/g,"\'")}') " style="flex:1;background:#4f46e5;color:white;border:none;padding:6px;border-radius:6px;font-weight:600;">📋</button>
+                        <button onclick="deleteItem('${String(i.id).replace(/'/g,"\'")}') " style="flex:1;background:red;color:white;border:none;padding:6px;border-radius:6px;font-weight:600;">🗑️</button>
+                    </div>
+                </div>`).join('')
+            + `<div style="margin-top:30px;padding-top:20px;border-top:2px solid #4f46e5;">
+                <h3 style="color:#ef4444;margin:0 0 15px 0;">🗑️ סל אשפה (${(appData.deletedItems||[]).length})</h3>
+                ${(appData.deletedItems||[]).length ? (appData.deletedItems||[]).map(i => `
+                    <div class="item-card" style="border-left:4px solid #ef4444;">
+                        <b>${escapeHtml(i.techName)}</b> <span style="background:#4f46e5;color:white;padding:2px 7px;border-radius:4px;font-size:12px;">ת.ז: ${escapeHtml(i.techId||'')} </span> - ${escapeHtml(i.custName)}
+                        <div style="font-size:12px;color:var(--slate-500);margin-top:4px;">${escapeHtml(i.custAddress||'')} </div>
+                        <div style="font-size:11px;color:#999;margin-top:4px;">❌ נמחק: ${i.deletedAt?formatDateHebrewLong(i.deletedAt):''}</div>
+                        <div style="display:flex;gap:6px;margin-top:8px;">
+                            <button onclick="restoreItem('${String(i.id).replace(/'/g,"\'")}') " style="flex:1;background:#16a34a;color:white;border:none;padding:6px;border-radius:6px;font-weight:600;">♻️ שחזור</button>
+                            <button onclick="permanentlyDeleteItem('${String(i.id).replace(/'/g,"\'")}') " style="flex:1;background:#7f1d1d;color:white;border:none;padding:6px;border-radius:6px;font-weight:600;">מחיקה קבועה</button>
+                        </div>
+                    </div>`).join('') : '<div style="color:var(--slate-500);text-align:center;padding:20px;">הסל ריק</div>'}
+            </div>`;
+        }
+
+        renderPasswordSection();
+        if (document.getElementById('staff-tools')?.style.display === 'block') renderStaffQueue();
+    }
+
+    // צוות - ללא ת.ז
+    function renderStaffQueue() {
+        const list = document.getElementById('staff-queue-list');
+        if (!list) return;
+        const queue = appData.queue || [];
+        if (!queue.length) { list.innerHTML = '<div style="color:var(--slate-500);text-align:center;">התור ריק</div>'; return; }
+        list.innerHTML = queue.map(item => {
+            const cur = item.orderStatus || 'ממתין';
+            return `<div class="item-card">
+                <b>${escapeHtml(item.techName)}</b> - ${escapeHtml(item.custName)}
+                <div style="font-size:12px;color:var(--slate-500);margin-top:4px;">${escapeHtml(item.custAddress||'')} </div>
+                ${renderItemsLine(item.items)}
+                <div style="background:#f1f5f9;padding:10px;border-radius:6px;margin-top:10px;">
+                    <p style="font-size:11px;margin:0 0 8px 0;color:var(--slate-500);font-weight:600;">סטטוס הזמנה:</p>
+                    <div style="display:flex;gap:6px;">
+                        <button onclick="setOrderStatus('${String(item.id).replace(/'/g,"\'")}','ממתין')" style="flex:1;background:#f97316;color:white;border:${cur==='ממתין'?'3px solid white':'none'};padding:6px;border-radius:4px;cursor:pointer;font-weight:600;font-size:12px;box-shadow:${cur==='ממתין'?'0 0 0 2px #f97316':'none'};">ממתין</button>
+                        <button onclick="setOrderStatus('${String(item.id).replace(/'/g,"\'")}','בהכנה')" style="flex:1;background:#eab308;color:white;border:${cur==='בהכנה'?'3px solid white':'none'};padding:6px;border-radius:4px;cursor:pointer;font-weight:600;font-size:12px;box-shadow:${cur==='בהכנה'?'0 0 0 2px #eab308':'none'};">בהכנה</button>
+                        <button onclick="setOrderStatus('${String(item.id).replace(/'/g,"\'")}','מוכן')" style="flex:1;background:#22c55e;color:white;border:${cur==='מוכן'?'3px solid white':'none'};padding:6px;border-radius:4px;cursor:pointer;font-weight:600;font-size:12px;box-shadow:${cur==='מוכן'?'0 0 0 2px #22c55e':'none'};">מוכן</button>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    function setOrderStatus(id, status) {
+        const item = (appData.queue||[]).find(x => String(x.id)===String(id));
+        if (!item) return;
+        item.orderStatus = status;
+        if (!item.auditLog) item.auditLog = [];
+        item.auditLog.push({ timestamp: Date.now(), action: `changed_to_${status}`, changedBy: 'צוות מחסן' });
         saveData();
-        alert("המיקום הוגדר ידנית בהצלחה!");
-    }
-
-    function setGpsAdminStatus(text, ok) {
-        const el = document.getElementById('gpsAdminStatus');
-        if (!el) return;
-        el.textContent = text || '';
-        el.style.color = ok ? 'green' : 'red';
-    }
-
-    function requestGpsPermission() {
-        if (!('geolocation' in navigator)) {
-            setGpsAdminStatus('הדפדפן לא תומך ב-GPS.', false);
-            return;
-        }
-        setGpsAdminStatus('מבקש הרשאה ל-GPS...', true);
-        navigator.geolocation.getCurrentPosition(
-            () => setGpsAdminStatus('ההרשאה ל-GPS אושרה ✓', true),
-            (err) => setGpsAdminStatus(`לא ניתן לקבל GPS: ${err?.message || err}`, false),
-            { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
-        );
-    }
-
-    function setAnchorFromCurrentLocation() {
-        if (!('geolocation' in navigator)) {
-            setGpsAdminStatus('הדפדפן לא תומך ב-GPS.', false);
-            return;
-        }
-        setGpsAdminStatus('קובע מיקום מחסן לפי המיקום הנוכחי...', true);
-        navigator.geolocation.getCurrentPosition(
-            async (pos) => {
-                appData.anchor = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-                await saveData();
-                setGpsAdminStatus('מיקום מחסן עודכן לפי המיקום הנוכחי ✓', true);
-            },
-            (err) => setGpsAdminStatus(`לא ניתן לקבוע מיקום: ${err?.message || err}`, false),
-            { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
-        );
-    }
-
-    function setGpsOverride(enabled) {
-        appData.gpsOverride = !!enabled;
-        saveData();
-        if (appData.gpsOverride) {
-            setGpsAdminStatus('מצב חריג פעיל: ניתן להצטרף בלי GPS.', true);
-        } else {
-            setGpsAdminStatus('מצב חריג כבוי.', true);
-        }
+        renderStaffQueue();
     }
 
     function checkLocation() {
         const form = document.getElementById('bookForm');
         if (form) form.classList.add('disabled');
-
-        if (appData.gpsOverride) {
-            updateBanner('ok', 'מצב חריג: ניתן להצטרף בלי GPS ✓');
-            if (form) form.classList.remove('disabled');
-            return;
-        }
-
-        if(!appData.anchor) { updateBanner('error', 'מנהל חייב להגדיר מיקום'); return; }
-        if (!('geolocation' in navigator)) { updateBanner('error', 'הדפדפן לא תומך ב-GPS'); return; }
+        if (appData.gpsOverride) { updateBanner('ok','מצב חריג: ניתן להצטרף בלי GPS ✓'); if(form)form.classList.remove('disabled'); return; }
+        if (!appData.anchor) { updateBanner('error','מנהל חייב להגדיר מיקום'); return; }
+        if (!('geolocation' in navigator)) { updateBanner('error','הדפדפן לא תומך ב-GPS'); return; }
         navigator.geolocation.getCurrentPosition(pos => {
-            const R = 6371e3;
-            const p1 = pos.coords.latitude * Math.PI/180, p2 = appData.anchor.lat * Math.PI/180;
-            const dp = (appData.anchor.lat-pos.coords.latitude)*Math.PI/180, dl = (appData.anchor.lng-pos.coords.longitude)*Math.PI/180;
-            const a = Math.sin(dp/2) ** 2 + Math.cos(p1) * Math.cos(p2) * (Math.sin(dl/2) ** 2);
-            const d = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            if(d <= 1000) {
-                updateBanner('ok', 'המיקום מאושר ✓');
-                if (form) form.classList.remove('disabled');
-            } else {
-                updateBanner('error', `רחוק מדי מהמחסן (${Math.round(d)} מ')`);
-            }
-        }, (err) => updateBanner('error', `נא לאשר GPS (${err?.message || err})`), {enableHighAccuracy: true});
+            const R=6371e3, p1=pos.coords.latitude*Math.PI/180, p2=appData.anchor.lat*Math.PI/180;
+            const dp=(appData.anchor.lat-pos.coords.latitude)*Math.PI/180, dl=(appData.anchor.lng-pos.coords.longitude)*Math.PI/180;
+            const a=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*(Math.sin(dl/2)**2);
+            const d=R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+            if (d<=1000) { updateBanner('ok','המיקום מאושר ✓'); if(form)form.classList.remove('disabled'); }
+            else updateBanner('error',`רחוק מדי מהמחסן (${Math.round(d)} מ')`);
+        }, err => updateBanner('error',`נא לאשר GPS (${err?.message||err})`), {enableHighAccuracy:true});
     }
 
-    function updateBanner(cls, txt) { let b = document.getElementById('geoBannerBook'); b.className = 'geo-banner ' + cls; b.textContent = txt; }
+    function updateBanner(cls, txt) { const b=document.getElementById('geoBannerBook'); b.className='geo-banner '+cls; b.textContent=txt; }
+
     function showTab(t) {
-        document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
-        document.getElementById('tab-' + t).classList.add('active');
-        if(t === 'book') checkLocation();
+        document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
+        document.getElementById('tab-'+t).classList.add('active');
+        if (t==='book') checkLocation();
     }
+
     function loginStaff() {
         const entered = document.getElementById('staffPass').value;
-        if (!appData.staffPassword) {
-            alert('מנהל טרם הגדיר סיסמה לצוות.');
-            return;
-        }
-        if (entered === appData.staffPassword) {
-            document.getElementById('staff-tools').style.display='block';
-            renderStaffQueue();
-        } else {
-            alert('סיסמה שגויה.');
-        }
+        if (!appData.staffPassword) { alert('מנהל טרם הגדיר סיסמה לצוות.'); return; }
+        if (entered===appData.staffPassword) { document.getElementById('staff-tools').style.display='block'; renderStaffQueue(); }
+        else alert('סיסמה שגויה.');
     }
-    function logoutStaff() {
-        document.getElementById('staffPass').value = '';
-        document.getElementById('staff-tools').style.display='none';
-    }
-    function renderStaffQueue() {
-        const list = document.getElementById('staff-queue-list');
-        if (!list) return;
-        const queue = appData.queue || [];
-        if (!queue.length) {
-            list.innerHTML = '<div style="color:var(--slate-500); font-size:14px; text-align:center;">התור ריק</div>';
-            return;
-        }
-        list.innerHTML = queue.map((item, idx) => {
-            const current = item.orderStatus || 'ממתין';
-            return `
-            <div class="item-card">
-                <div style="margin-bottom:12px;">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
-                        <div style="flex:1;">
-                            <b style="font-size:15px;">${escapeHtml(item.techName)}</b> - ${escapeHtml(item.custName)}
-                            <div style="font-size:12px; color:var(--slate-500); margin-top:4px;">
-                                ${escapeHtml(item.custAddress || '')}
-                            </div>
-                            ${renderItemsLine(item.items)}
-                        </div>
-                    </div>
-                </div>
-                <div style="background:#f1f5f9; padding:10px; border-radius:6px; margin-bottom:10px;">
-                    <p style="font-size:11px; margin:0 0 8px 0; color:var(--slate-500); font-weight:600;">סטטוס הזמנה:</p>
-                    <div style="display:flex; gap:6px;">
-                        <button onclick="setOrderStatus('${String(item.id).replace(/'/g, "\\'")}', 'ממתין')" 
-                                style="flex:1; background:#f97316; color:white; border:${current === 'ממתין' ? '3px solid white' : 'none'}; padding:6px; border-radius:4px; cursor:pointer; font-weight:${current === 'ממתין' ? '700' : '600'}; font-size:12px; box-shadow:${current === 'ממתין' ? '0 0 0 2px #f97316' : 'none'};">
-                            ממתין
-                        </button>
-                        <button onclick="setOrderStatus('${String(item.id).replace(/'/g, "\\'")}', 'בהכנה')" 
-                                style="flex:1; background:#eab308; color:white; border:${current === 'בהכנה' ? '3px solid white' : 'none'}; padding:6px; border-radius:4px; cursor:pointer; font-weight:${current === 'בהכנה' ? '700' : '600'}; font-size:12px; box-shadow:${current === 'בהכנה' ? '0 0 0 2px #eab308' : 'none'};">
-                            בהכנה
-                        </button>
-                        <button onclick="setOrderStatus('${String(item.id).replace(/'/g, "\\'")}', 'מוכן')" 
-                                style="flex:1; background:#22c55e; color:white; border:${current === 'מוכן' ? '3px solid white' : 'none'}; padding:6px; border-radius:4px; cursor:pointer; font-weight:${current === 'מוכן' ? '700' : '600'}; font-size:12px; box-shadow:${current === 'מוכן' ? '0 0 0 2px #22c55e' : 'none'};">
-                            מוכן
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `; }).join('');
-    }
-    function setOrderStatus(id, orderStatus) {
-        const item = (appData.queue || []).find(x => String(x.id) === String(id));
-        if (!item) return;
-        item.orderStatus = orderStatus;
-        if (!item.auditLog) item.auditLog = [];
-        item.auditLog.push({ timestamp: Date.now(), action: `changed_to_${orderStatus}`, changedBy: 'צוות מחסן' });
-        saveData();
-        renderStaffQueue();
-    }
-    function setItemStatus(id, status) {
-        const item = (appData.queue || []).find(x => String(x.id) === String(id));
-        if (!item) return;
-        item.status = status;
-        saveData();
-        renderStaffQueue();
-    }
+
+    function logoutStaff() { document.getElementById('staffPass').value=''; document.getElementById('staff-tools').style.display='none'; }
+
     function loginAdmin() {
         const entered = document.getElementById('adminPass').value;
         if (!appData.adminPassword) {
@@ -504,122 +319,147 @@
             if (!newPass) return;
             appData.adminPassword = newPass;
             saveData();
-            document.getElementById('adminPass').value = '';
+            document.getElementById('adminPass').value='';
             document.getElementById('admin-tools').style.display='block';
             renderPasswordSection();
             return;
         }
-        if (entered === appData.adminPassword) {
-            document.getElementById('admin-tools').style.display='block';
-            renderPasswordSection();
-        } else {
-            alert('סיסמה שגויה.');
-        }
+        if (entered===appData.adminPassword) { document.getElementById('admin-tools').style.display='block'; renderPasswordSection(); }
+        else alert('סיסמה שגויה.');
     }
+
     function changeAdminPassword() {
-        const newPass = prompt('הגדר סיסמה חדשה למנהל:');
-        if (!newPass) return;
-        appData.adminPassword = newPass;
-        saveData();
-        alert('סיסמת המנהל שונתה בהצלחה.');
-        renderPasswordSection();
+        const p = prompt('הגדר סיסמה חדשה למנהל:');
+        if (!p) return;
+        appData.adminPassword = p; saveData(); alert('סיסמת המנהל שונתה.'); renderPasswordSection();
     }
+
     function setStaffPassword() {
-        const newPass = prompt('הגדר סיסמה לצוות:');
-        if (!newPass) return;
-        appData.staffPassword = newPass;
-        saveData();
-        alert('סיסמת הצוות הוגדרה בהצלחה.');
-        renderPasswordSection();
+        const p = prompt('הגדר סיסמה לצוות:');
+        if (!p) return;
+        appData.staffPassword = p; saveData(); alert('סיסמת הצוות הוגדרה.'); renderPasswordSection();
     }
+
     function renderPasswordSection() {
         const el = document.getElementById('passwordStatus');
         if (!el) return;
-        const adminStatus = appData.adminPassword ? 'סיסמת מנהל הוגדרה ✓' : 'סיסמת מנהל לא הוגדרה';
-        const staffStatus = appData.staffPassword ? 'סיסמת צוות הוגדרה ✓' : 'סיסמת צוות לא הוגדרה';
-        el.innerHTML = `${adminStatus}<br/>${staffStatus}`;
-        el.style.color = (appData.adminPassword && appData.staffPassword) ? 'green' : 'orange';
+        el.innerHTML = `${appData.adminPassword?'סיסמת מנהל הוגדרה ✓':'סיסמת מנהל לא הוגדרה'}<br>${appData.staffPassword?'סיסמת צוות הוגדרה ✓':'סיסמת צוות לא הוגדרה'}`;
+        el.style.color = (appData.adminPassword&&appData.staffPassword)?'green':'orange';
     }
-    function deleteItem(id) { 
-        const item = appData.queue.find(x => x.id == id);
-        if (item) {
-            item.deletedAt = Date.now();
-            appData.deletedItems.push(item);
-            appData.queue = appData.queue.filter(x => x.id != id);
-            saveData();
-        }
+
+    function forceSetLocation() { appData.anchor={lat:32.2003,lng:34.8911}; saveData(); alert('המיקום הוגדר בהצלחה!'); }
+
+    function setGpsAdminStatus(text, ok) { const el=document.getElementById('gpsAdminStatus'); if(el){el.textContent=text;el.style.color=ok?'green':'red';} }
+
+    function requestGpsPermission() {
+        if (!('geolocation' in navigator)) { setGpsAdminStatus('הדפדפן לא תומך ב-GPS.',false); return; }
+        setGpsAdminStatus('מבקש הרשאה...',true);
+        navigator.geolocation.getCurrentPosition(()=>setGpsAdminStatus('ההרשאה אושרה ✓',true), err=>setGpsAdminStatus(`שגיאה: ${err?.message}`,false), {enableHighAccuracy:true,timeout:15000});
     }
+
+    function setAnchorFromCurrentLocation() {
+        if (!('geolocation' in navigator)) { setGpsAdminStatus('הדפדפן לא תומך ב-GPS.',false); return; }
+        setGpsAdminStatus('קובע מיקום...',true);
+        navigator.geolocation.getCurrentPosition(async pos => {
+            appData.anchor={lat:pos.coords.latitude,lng:pos.coords.longitude};
+            await saveData(); setGpsAdminStatus('מיקום עודכן ✓',true);
+        }, err=>setGpsAdminStatus(`שגיאה: ${err?.message}`,false), {enableHighAccuracy:true,timeout:15000});
+    }
+
+    function setGpsOverride(enabled) {
+        appData.gpsOverride=!!enabled; saveData();
+        setGpsAdminStatus(appData.gpsOverride?'מצב חריג פעיל.':'מצב חריג כבוי.',true);
+    }
+
+    function deleteItem(id) {
+        const item = appData.queue.find(x=>x.id==id);
+        if (item) { item.deletedAt=Date.now(); appData.deletedItems.push(item); appData.queue=appData.queue.filter(x=>x.id!=id); saveData(); }
+    }
+
     function restoreItem(id) {
-        const item = appData.deletedItems.find(x => x.id == id);
-        if (item) {
-            delete item.deletedAt;
-            appData.queue.push(item);
-            appData.deletedItems = appData.deletedItems.filter(x => x.id != id);
-            saveData();
-        }
+        const item = appData.deletedItems.find(x=>x.id==id);
+        if (item) { delete item.deletedAt; appData.queue.push(item); appData.deletedItems=appData.deletedItems.filter(x=>x.id!=id); saveData(); }
     }
-    function permanentlyDeleteItem(id) {
-        appData.deletedItems = appData.deletedItems.filter(x => x.id != id);
-        saveData();
-    }
+
+    function permanentlyDeleteItem(id) { appData.deletedItems=appData.deletedItems.filter(x=>x.id!=id); saveData(); }
+
     function moveItem(id, dir) {
-        const idx = (appData.queue || []).findIndex(x => String(x.id) === String(id));
-        if (idx < 0) return;
-        const newIdx = idx + dir;
-        if (newIdx < 0 || newIdx >= appData.queue.length) return;
-        const [item] = appData.queue.splice(idx, 1);
-        appData.queue.splice(newIdx, 0, item);
+        const idx=(appData.queue||[]).findIndex(x=>String(x.id)===String(id));
+        if (idx<0) return;
+        const newIdx=idx+dir;
+        if (newIdx<0||newIdx>=appData.queue.length) return;
+        const [item]=appData.queue.splice(idx,1);
+        appData.queue.splice(newIdx,0,item);
         saveData();
     }
-    
+
     let draggedItemId = null;
-    function dragStart(event, id) {
-        draggedItemId = id;
-        event.dataTransfer.effectAllowed = 'move';
-    }
-    function dragOver(event) {
-        event.preventDefault();
-        event.dataTransfer.dropEffect = 'move';
-    }
+    function dragStart(event, id) { draggedItemId=id; event.dataTransfer.effectAllowed='move'; }
+    function dragOver(event) { event.preventDefault(); }
     function dragDrop(event, targetId) {
         event.preventDefault();
-        if (!draggedItemId || draggedItemId === targetId) return;
-        const draggedIdx = (appData.queue || []).findIndex(x => String(x.id) === String(draggedItemId));
-        const targetIdx = (appData.queue || []).findIndex(x => String(x.id) === String(targetId));
-        if (draggedIdx < 0 || targetIdx < 0) return;
-        const [item] = appData.queue.splice(draggedIdx, 1);
-        appData.queue.splice(targetIdx, 0, item);
-        draggedItemId = null;
+        if (!draggedItemId||draggedItemId===targetId) return;
+        const di=(appData.queue||[]).findIndex(x=>String(x.id)===String(draggedItemId));
+        const ti=(appData.queue||[]).findIndex(x=>String(x.id)===String(targetId));
+        if (di<0||ti<0) return;
+        const [item]=appData.queue.splice(di,1);
+        appData.queue.splice(ti,0,item);
+        draggedItemId=null;
         saveData();
     }
-    
+
     function showAuditLog(id) {
-        const item = (appData.queue || []).find(x => String(x.id) === String(id));
+        const item=(appData.queue||[]).find(x=>String(x.id)===String(id));
         if (!item) return;
-        const log = item.auditLog || [];
-        const logText = log.length ? log.map(entry => {
-            const dateStr = formatDateHebrewLong(entry.timestamp);
-            const actionText = entry.action === 'created' ? 'נוצרה הזמנה' : entry.action.replace('changed_to_', 'שונה סטטוס ל');
-            return `📝 ${dateStr} - ${actionText} (${entry.changedBy})`;
-        }).join('\n\n') : 'אין רשומות';
-        alert(`היסטוריה של הזמנה:\n${escapeHtml(item.techName)} - ${escapeHtml(item.custName)}\n\n${logText}`);
+        const log=item.auditLog||[];
+        const txt=log.length ? log.map(e=>`📝 ${formatDateHebrewLong(e.timestamp)} - ${e.action==='created'?'נוצרה הזמנה':e.action.replace('changed_to_','שונה סטטוס ל')} (${e.changedBy})`).join('\n\n') : 'אין רשומות';
+        alert(`היסטוריה:\n${item.techName} - ${item.custName}\n\n${txt}`);
     }
-    
+
+    function clearAllQueue() {
+        if (!(appData.queue&&appData.queue.length)) { alert('התור כבר ריק.'); return; }
+        if (!confirm(`האם אתה בטוח? ${appData.queue.length} תורים יועברו לסל האשפה.`)) return;
+        const now=Date.now();
+        appData.queue.forEach(item=>{ item.deletedAt=now; appData.deletedItems.push(item); });
+        appData.queue=[];
+        saveData();
+        alert('כל התורים הועברו לסל האשפה.');
+    }
+
+    function exportExcel() {
+        const queue = appData.queue || [];
+        if (!queue.length) { alert('התור ריק, אין מה לייצא.'); return; }
+        const rows = queue.map((item, idx) => ({
+            '#': idx+1,
+            'שם טכנאי': item.techName||'',
+            'ת.ז טכנאי': item.techId||'',
+            'שם לקוח': item.custName||'',
+            'כתובת לקוח': item.custAddress||'',
+            'פריטים': (item.items||[]).map(x=>x.name+(x.qty?' x'+x.qty:'')).join(', '),
+            'סטטוס': item.orderStatus||'ממתין',
+            'תאריך הגשה': item.createdAt ? new Date(item.createdAt).toLocaleString('he-IL') : ''
+        }));
+        const ws = XLSX.utils.json_to_sheet(rows);
+        ws['!cols'] = [{wch:4},{wch:18},{wch:12},{wch:18},{wch:22},{wch:30},{wch:10},{wch:20}];
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'תור נוכחי');
+        XLSX.writeFile(wb, 'תור_'+new Date().toLocaleDateString('he-IL').replace(/\//g,'-')+'.xlsx');
+    }
+
     async function handleBook(e) {
         e.preventDefault();
+        const techIdVal = document.getElementById('techId').value;
+        if (!/^\d{9}$/.test(techIdVal)) { alert('ת.ז חייבת להכיל בדיוק 9 ספרות.'); document.getElementById('techId').focus(); return; }
         const items = collectItemsFromForm();
         const now = Date.now();
         appData.queue.push({
             id: now,
             techName: document.getElementById('techName').value,
-            techId: document.getElementById('techId').value,
+            techId: techIdVal,
             custName: document.getElementById('custName').value,
             custAddress: document.getElementById('custAddress').value,
-            items,
-            status: 'wait',
-            orderStatus: 'ממתין',
-            createdAt: now,
-            auditLog: [{ timestamp: now, action: 'created', changedBy: 'טכנאי' }]
+            items, status: 'wait', orderStatus: 'ממתין', createdAt: now,
+            auditLog: [{timestamp:now, action:'created', changedBy:'טכנאי'}]
         });
         await saveData();
         resetBookForm();
@@ -630,93 +470,60 @@
         const container = document.getElementById('itemsContainer');
         if (!container) return;
         const rowId = `item_${Date.now()}_${Math.random().toString(16).slice(2)}`;
-        const name = escapeHtml(preset?.name ?? '');
-        const qty = escapeHtml(preset?.qty ?? '');
+        const name = preset?.name ?? '';
+        const qty = preset?.qty ?? '';
         const row = document.createElement('div');
         row.id = rowId;
-        row.style.display = 'grid';
-        row.style.gridTemplateColumns = '1fr 100px 44px';
-        row.style.gap = '8px';
-        row.style.marginBottom = '8px';
-        
-        let qtyOptions = '';
-        for (let i = 1; i <= 100; i++) {
-            const selected = qty === String(i) ? 'selected' : '';
-            qtyOptions += `<option value="${i}" ${selected}>${i}</option>`;
-        }
-        
+        row.style.cssText = 'display:grid;grid-template-columns:1fr 100px 44px;gap:8px;margin-bottom:8px;';
+        let qtyOptions = '<option value="">בחר כמות</option>';
+        for (let i=1;i<=100;i++) qtyOptions += `<option value="${i}"${qty===String(i)?' selected':''} >${i}</option>`;
         row.innerHTML = `
             <input data-item-name="1" type="text" placeholder="פריט" value="${name}" style="margin-bottom:0;">
-            <select data-item-qty="1" style="margin-bottom:0; padding:8px; border:1px solid var(--slate-200); border-radius:6px; font-size:14px;">
-                <option value="">בחר כמות</option>
-                ${qtyOptions}
-            </select>
-            <button type="button" onclick="removeItemRow('${rowId}')" style="background:#ef4444;color:white;border:none;border-radius:6px;cursor:pointer;">✕</button>
-        `;
+            <select data-item-qty="1" style="margin-bottom:0;padding:8px;border:1px solid var(--slate-200);border-radius:6px;font-size:14px;">${qtyOptions}</select>
+            <button type="button" onclick="removeItemRow('${rowId}')" style="background:#ef4444;color:white;border:none;border-radius:6px;cursor:pointer;">✕</button>`;
         container.appendChild(row);
     }
 
-    function removeItemRow(rowId) {
-        const row = document.getElementById(rowId);
-        if (row) row.remove();
-    }
+    function removeItemRow(rowId) { const r=document.getElementById(rowId); if(r)r.remove(); }
 
     function collectItemsFromForm() {
-        const container = document.getElementById('itemsContainer');
+        const container=document.getElementById('itemsContainer');
         if (!container) return [];
-        const rows = Array.from(container.children);
-        const items = [];
-        for (const row of rows) {
-            const nameEl = row.querySelector('[data-item-name]');
-            const qtyEl = row.querySelector('[data-item-qty]');
-            const name = (nameEl?.value ?? '').trim();
-            const qtyRaw = (qtyEl?.value ?? '').toString().trim();
-            const qtyNum = Number(qtyRaw);
-            const qty = Number.isFinite(qtyNum) && qtyNum > 0 ? String(qtyNum) : '';
-            if (!name && !qty) continue;
-            items.push({ name, qty });
-        }
-        return items;
+        return Array.from(container.children).map(row => {
+            const name=(row.querySelector('[data-item-name]')?.value??'').trim();
+            const qtyRaw=(row.querySelector('[data-item-qty]')?.value??'').trim();
+            const qty=Number.isFinite(Number(qtyRaw))&&Number(qtyRaw)>0?String(Number(qtyRaw)):'';
+            return (name||qty)?{name,qty}:null;
+        }).filter(Boolean);
     }
 
     function resetBookForm() {
-        const form = document.getElementById('bookForm');
-        if (form) form.reset();
-        const container = document.getElementById('itemsContainer');
-        if (container) container.innerHTML = '';
+        const form=document.getElementById('bookForm');
+        if(form)form.reset();
+        const c=document.getElementById('itemsContainer');
+        if(c)c.innerHTML='';
         addItemRow();
     }
 
-    async function exportData() {
-        const payload = JSON.stringify(appData, null, 2);
-        if (navigator.clipboard?.writeText) {
-            try {
-                await navigator.clipboard.writeText(payload);
-                alert('הנתונים הועתקו ללוח (Clipboard).');
-                return;
-            } catch (_) {}
-        }
-        prompt('העתק את ה-JSON:', payload);
-    }
 
-    async function importData() {
-        const raw = prompt('הדבק JSON לייבוא:');
-        if (!raw) return;
-        try {
-            const parsed = JSON.parse(raw);
-            appData = normalizeData(parsed);
-            await saveData();
-            alert('ייבוא בוצע בהצלחה.');
-        } catch (e) {
-            alert('JSON לא תקין.');
+    function checkAutoDailyReset() {
+        const now = new Date();
+        const todayKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+        const lastReset = appData.lastAutoReset || '';
+        // בדוק אם עברנו 22:00 היום ועדיין לא ביצענו איפוס היום
+        if (now.getHours() >= 22 && lastReset !== todayKey) {
+            if (appData.queue && appData.queue.length > 0) {
+                const ts = Date.now();
+                appData.queue.forEach(item => { item.deletedAt = ts; appData.deletedItems.push(item); });
+                appData.queue = [];
+                console.log('✅ איפוס יומי אוטומטי בוצע');
+            }
+            appData.lastAutoReset = todayKey;
+            saveData();
         }
     }
 
-    (async () => {
-        await loadData();
-        addItemRow();
-        renderAll();
-    })();
+    (async () => { await loadData(); checkAutoDailyReset(); addItemRow(); renderAll(); })();
 </script>
 </body>
 </html>
